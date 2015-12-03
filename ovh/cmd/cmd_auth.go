@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"log"
-	"x/glog"
 
 	"golang.org/x/net/context"
 
@@ -19,8 +18,8 @@ var cmdAuth = cli.Command{
 			log.Fatal(err)
 		}
 
-		glog.Infof("Validate token: %s", resp.ValidationURL)
-		glog.Infof("export OVH_CONSUMER_KEY=%q", resp.ConsumerKey)
+		log.Printf("Validate token: %s", resp.ValidationURL)
+		log.Printf("export OVH_CONSUMER_KEY=%q", resp.ConsumerKey)
 	},
 }
 
