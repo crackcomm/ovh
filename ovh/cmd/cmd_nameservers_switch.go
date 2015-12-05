@@ -22,19 +22,20 @@ var cmdNSSwitch = cli.Command{
 			Name:  "domain",
 			Usage: "comma separated list of domains to apply settings to",
 		},
+		cli.StringSliceFlag{
+			Name:  "ns",
+			Usage: "nameserver",
+		},
 	},
 	Action: func(c *cli.Context) {
-		if len(c.Args()) == 0 {
-			log.Fatal("Usage: ovh ns switch <nameserver> <nameserver> [<nameserver> ...]")
-		}
-		if len(c.Args()) < 2 {
+		if len(c.StringSlice("ns")) < 2 {
 			log.Fatal("At least two domain name servers are required.")
 		}
 		if !c.Bool("all") && c.String("domain") == "" {
 			log.Fatal("You have to use --all or --domain.")
 		}
 
-		ns := []string(c.Args())
+		ns := c.StringSlice("ns")
 		for _, domain := range domainsFromCtx(c) {
 			switchDomainNameservers(c, domain, ns)
 		}
