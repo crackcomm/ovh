@@ -10,9 +10,8 @@ import (
 )
 
 var cmdNSSwitch = cli.Command{
-	Name:      "switch",
-	Usage:     "switches domain name servers",
-	ArgsUsage: "<nameserver> <nameserver> [<nameserver> ...]",
+	Name:  "switch",
+	Usage: "switches domain name servers",
 	Flags: []cli.Flag{
 		cli.BoolFlag{
 			Name:  "all",
