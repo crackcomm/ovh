@@ -1,28 +1,34 @@
 package cmd
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
-	"os"
 
 	"golang.org/x/net/context"
 
 	"github.com/codegangsta/cli"
-	"github.com/olekukonko/tablewriter"
 )
 
 var cmdDomainsDetails = cli.Command{
-	Name:  "details",
-	Usage: "print domain details",
+	Name:      "details",
+	Usage:     "prints domain details",
+	ArgsUsage: "<domain>",
 	Action: func(c *cli.Context) {
-		domains, err := client(c).Domains.List(context.Background())
+		if len(c.Args()) != 1 {
+			cli.ShowSubcommandHelp(c)
+			return
+		}
+		domain, err := client(c).Domains.Details(context.Background(), c.Args().First())
 		if err != nil {
 			log.Fatal(err)
 		}
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"Domain"})
-		for _, domain := range domains {
-			table.Append([]string{domain})
+
+		body, err := json.MarshalIndent(domain, "", "  ")
+		if err != nil {
+			log.Fatal(err)
 		}
-		table.Render()
+
+		fmt.Printf("%s\n", body)
 	},
 }
