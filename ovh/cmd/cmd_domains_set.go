@@ -19,11 +19,11 @@ var cmdDomainsSet = cli.Command{
 			Usage: "applies settings to all domains on account",
 		},
 		cli.StringFlag{
-			Name:  "name_server_type",
+			Name:  "name-server-type",
 			Usage: "changes domain name server type (external or hosted)",
 		},
 		cli.StringFlag{
-			Name:  "transfer_lock_status",
+			Name:  "transfer-lock-status",
 			Usage: "changes domain transfer lock status (locked or unlocked)",
 		},
 	},
@@ -37,8 +37,8 @@ var cmdDomainsSet = cli.Command{
 		client := client(c)
 		ctx := context.Background()
 		patch := &ovh.DomainPatch{
-			NameServerType:     c.String("name_server_type"),
-			TransferLockStatus: c.String("transfer_lock_status"),
+			NameServerType:     c.String("name-server-type"),
+			TransferLockStatus: c.String("transfer-lock-status"),
 		}
 
 		if v := patch.NameServerType; v != "" {
