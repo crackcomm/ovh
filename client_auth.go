@@ -3,6 +3,7 @@ package ovh
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"golang.org/x/net/context"
@@ -15,14 +16,18 @@ type AuthenticateRequest struct {
 }
 
 // Authenticate - Requests OVH authentiction.
-func (client *Client) Authenticate(ctx context.Context) (result *AuthenticateRequest, err error) {
-	buffer := bytes.NewBufferString(`{"accessRules": [
-		{"method": "GET", "path": "/*"},
-		{"method": "PUT", "path": "/*"},
-		{"method": "POST", "path": "/*"},
-		{"method": "DELETE", "path": "/*"}
-	]}`)
-	response, err := httpDo(ctx, client.opts, "POST", apiURL("/auth/credential"), buffer)
+// It is ok to use one callback url or none.
+func (client *Client) Authenticate(ctx context.Context, callbackURL ...string) (result *AuthenticateRequest, err error) {
+	buffer := bytes.NewBufferString(fmt.Sprintf(`{
+		"accessRules": [
+			{"method": "GET", "path": "/*"},
+			{"method": "PUT", "path": "/*"},
+			{"method": "POST", "path": "/*"},
+			{"method": "DELETE", "path": "/*"}
+		],
+		"redirection": "%s"
+	}`, firstString(callbackURL)))
+	response, err := httpDo(ctx, client.Options, "POST", apiURL("/auth/credential"), buffer)
 	if err != nil {
 		return
 	}
@@ -45,4 +50,11 @@ func (client *Client) Authenticate(ctx context.Context) (result *AuthenticateReq
 		ValidationURL: r.ValidationURL,
 		ConsumerKey:   r.ConsumerKey,
 	}, nil
+}
+
+func firstString(s []string) (_ string) {
+	if len(s) != 0 {
+		return s[0]
+	}
+	return
 }

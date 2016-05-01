@@ -24,14 +24,6 @@ type DomainPatch struct {
 	TransferLockStatus string `json:"transfer_lock_status,omitempty"`
 }
 
-// NameServer - Name Server structure.
-type NameServer struct {
-	ID       string `json:"id,omitempty"`
-	Host     string `json:"host,omitempty"`
-	ToDelete bool   `json:"to_delete,omitempty"`
-	IsUsed   bool   `json:"is_used,omitempty"`
-}
-
 type tempDomain struct {
 	Offer              string `json:"offer,omitempty"`
 	WhoisOwner         string `json:"whoisOwner,omitempty"`

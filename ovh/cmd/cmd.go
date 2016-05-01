@@ -7,6 +7,7 @@ import "github.com/codegangsta/cli"
 func New() []cli.Command {
 	return []cli.Command{
 		cmdAuth,
+		cmdUserInfo,
 		cmdDomains,
 		cmdNS,
 	}

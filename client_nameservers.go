@@ -11,12 +11,13 @@ import (
 
 // NameServers - OVH Domains Name Servers API Client.
 type NameServers struct {
-	opts *Options
+	// Options - Client options.
+	*Options
 }
 
 // List - Gets domain nameservers info by domain name.
 func (nameservers *NameServers) List(ctx context.Context, domain string) (result []*NameServer, err error) {
-	response, err := httpDo(ctx, nameservers.opts, "GET", apiURL("/domain/%s/nameServer", domain), nil)
+	response, err := httpDo(ctx, nameservers.Options, "GET", apiURL("/domain/%s/nameServer", domain), nil)
 	if err != nil {
 		return
 	}
@@ -45,7 +46,7 @@ func (nameservers *NameServers) List(ctx context.Context, domain string) (result
 
 // Details - Gets domain nameserver info by domain name and name server ID.
 func (nameservers *NameServers) Details(ctx context.Context, domain, id string) (result *NameServer, err error) {
-	response, err := httpDo(ctx, nameservers.opts, "GET", apiURL("/domain/%s/nameServer/%s", domain, id), nil)
+	response, err := httpDo(ctx, nameservers.Options, "GET", apiURL("/domain/%s/nameServer/%s", domain, id), nil)
 	if err != nil {
 		return
 	}
@@ -76,7 +77,7 @@ func (nameservers *NameServers) Details(ctx context.Context, domain, id string) 
 
 // Delete - Deletes domain nameserver by domain name and name server ID.
 func (nameservers *NameServers) Delete(ctx context.Context, domain, id string) (err error) {
-	response, err := httpDo(ctx, nameservers.opts, "DELETE", apiURL("/domain/%s/nameServer/%s", domain, id), nil)
+	response, err := httpDo(ctx, nameservers.Options, "DELETE", apiURL("/domain/%s/nameServer/%s", domain, id), nil)
 	if err != nil {
 		return
 	}
@@ -111,7 +112,7 @@ func (nameservers *NameServers) Insert(ctx context.Context, domain string, names
 	if err != nil {
 		return
 	}
-	response, err := httpDo(ctx, nameservers.opts, "POST", apiURL("/domain/%s/nameServer", domain), buffer)
+	response, err := httpDo(ctx, nameservers.Options, "POST", apiURL("/domain/%s/nameServer", domain), buffer)
 	if err != nil {
 		return
 	}

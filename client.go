@@ -9,16 +9,22 @@ type Options struct {
 
 // Client - OVH API Client.
 type Client struct {
+	// User - OVH user info API client.
+	*User
+	// Domains - OVH domains API client.
 	*Domains
+	// NameServers - OVH name servers API client.
 	*NameServers
-	opts *Options
+	// Options - OVH API client options.
+	*Options
 }
 
 // New - Creates a new OVH client.
 func New(opts *Options) *Client {
 	return &Client{
-		Domains:     &Domains{opts: opts},
-		NameServers: &NameServers{opts: opts},
-		opts:        opts,
+		User:        &User{Options: opts},
+		Domains:     &Domains{Options: opts},
+		NameServers: &NameServers{Options: opts},
+		Options:     opts,
 	}
 }

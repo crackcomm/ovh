@@ -10,12 +10,13 @@ import (
 
 // Domains - OVH Domains API Client.
 type Domains struct {
-	opts *Options
+	// Options - Client options.
+	*Options
 }
 
 // List - Lists domains.
 func (domains *Domains) List(ctx context.Context) (result []string, err error) {
-	response, err := httpDo(ctx, domains.opts, "GET", apiURL("/domain"), nil)
+	response, err := httpDo(ctx, domains.Options, "GET", apiURL("/domain"), nil)
 	if err != nil {
 		return
 	}
@@ -35,7 +36,7 @@ func (domains *Domains) List(ctx context.Context) (result []string, err error) {
 
 // Details - Gets domain details by domain name.
 func (domains *Domains) Details(ctx context.Context, domain string) (result *Domain, err error) {
-	response, err := httpDo(ctx, domains.opts, "GET", apiURL("/domain/%s", domain), nil)
+	response, err := httpDo(ctx, domains.Options, "GET", apiURL("/domain/%s", domain), nil)
 	if err != nil {
 		return
 	}
@@ -67,7 +68,7 @@ func (domains *Domains) Patch(ctx context.Context, domain string, p *DomainPatch
 	if err != nil {
 		return
 	}
-	response, err := httpDo(ctx, domains.opts, "PUT", apiURL("/domain/%s", domain), buffer)
+	response, err := httpDo(ctx, domains.Options, "PUT", apiURL("/domain/%s", domain), buffer)
 	if err != nil {
 		return
 	}

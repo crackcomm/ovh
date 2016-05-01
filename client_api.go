@@ -34,11 +34,12 @@ type ovhRequest struct {
 	timestamp string
 }
 
+var plus = []byte("+")
+
 // requestSignature - Calculates a request signature and returns in following pattern
 // "$1$" + SHA1_HEX(AS+"+"+CK+"+"+METHOD+"+"+QUERY+"+"+BODY+"+"+TSTAMP)
 func (req *ovhRequest) signature() string {
 	hash := sha1.New()
-	plus := []byte("+")
 	hash.Write([]byte(req.opts.AppSecret))
 	hash.Write(plus)
 	hash.Write([]byte(req.opts.ConsumerKey))
