@@ -26,7 +26,7 @@ func (user *User) Info(ctx context.Context) (result *UserInfo, err error) {
 	}
 
 	res := new(tempUserInfo)
-	err = json.NewDecoder(response.Body).Decode(&res)
+	err = json.NewDecoder(response.Body).Decode(res)
 	if err != nil {
 		return
 	}
