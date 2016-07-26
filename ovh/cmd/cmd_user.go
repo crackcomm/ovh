@@ -14,7 +14,7 @@ var cmdUserInfo = cli.Command{
 	Name:  "user",
 	Usage: "shows user info",
 	Action: func(c *cli.Context) {
-		resp, err := client(c).Users.Info(context.Background())
+		resp, err := client(c).User.Info(context.Background())
 		if err != nil {
 			log.Fatal(err)
 		}
