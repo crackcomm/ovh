@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"golang.org/x/net/context"
@@ -20,10 +19,10 @@ var cmdDomainsList = cli.Command{
 			Usage: "print list of domains instead of table",
 		},
 	},
-	Action: func(c *cli.Context) {
+	Action: func(c *cli.Context) (err error) {
 		domains, err := client(c).Domains.List(context.Background())
 		if err != nil {
-			log.Fatal(err)
+			return
 		}
 
 		if c.Bool("list") {
@@ -39,5 +38,7 @@ var cmdDomainsList = cli.Command{
 			table.Append([]string{domain})
 		}
 		table.Render()
+
+		return
 	},
 }

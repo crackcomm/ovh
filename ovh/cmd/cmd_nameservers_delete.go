@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"log"
 	"strings"
 
@@ -12,9 +13,9 @@ var cmdNSDelete = cli.Command{
 	Name:      "delete",
 	Usage:     "deletes domain name server by id",
 	ArgsUsage: "<domain> <nameserver> [<nameserver> ...]",
-	Action: func(c *cli.Context) {
+	Action: func(c *cli.Context) (err error) {
 		if len(c.Args()) < 2 {
-			log.Fatal("Usage: ovh ns delete <domain> <nameserver> [<nameserver> ...]")
+			return errors.New("Usage: ovh ns delete <domain> <nameserver> [<nameserver> ...]")
 		}
 
 		domain := c.Args().First()
@@ -22,11 +23,12 @@ var cmdNSDelete = cli.Command{
 		log.Printf("Deleting nameservers to %q: %s", domain, strings.Join(ns, ", "))
 
 		for _, id := range ns {
-			err := client(c).NameServers.Delete(context.Background(), domain, id)
+			err = client(c).NameServers.Delete(context.Background(), domain, id)
 			if err != nil {
-				log.Fatal(err)
+				return
 			}
-			log.Println("Done")
 		}
+		log.Println("OK")
+		return
 	},
 }

@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"log"
+	"errors"
 	"os"
 
 	"github.com/codegangsta/cli"
@@ -23,11 +23,11 @@ var cmdNSList = cli.Command{
 			Usage: "comma separated list of domains to apply settings to",
 		},
 	},
-	Action: func(c *cli.Context) {
+	Action: func(c *cli.Context) (err error) {
 		if len(c.Args()) == 0 && !c.Bool("all") {
-			log.Fatal("You have to use --all or provide list of domains in arguments.")
+			return errors.New("You have to use --all or provide list of domains in arguments.")
 		} else if len(c.Args()) > 0 && c.Bool("all") {
-			log.Fatal("Cannot use --all with list of domains")
+			return errors.New("Cannot use --all with list of domains")
 		}
 
 		table := tablewriter.NewWriter(os.Stdout)
@@ -42,7 +42,7 @@ var cmdNSList = cli.Command{
 		for _, domain := range domainsFromCtx(c) {
 			result, err := client(c).NameServers.List(context.Background(), domain)
 			if err != nil {
-				log.Fatal(err)
+				return err
 			}
 			for _, ns := range result {
 				table.Append([]string{
@@ -55,5 +55,6 @@ var cmdNSList = cli.Command{
 			}
 		}
 		table.Render()
+		return
 	},
 }

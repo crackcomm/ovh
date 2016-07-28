@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 
 	"golang.org/x/net/context"
@@ -13,17 +12,18 @@ import (
 var cmdUserInfo = cli.Command{
 	Name:  "user",
 	Usage: "shows user info",
-	Action: func(c *cli.Context) {
+	Action: func(c *cli.Context) (err error) {
 		resp, err := client(c).User.Info(context.Background())
 		if err != nil {
-			log.Fatal(err)
+			return
 		}
 
 		body, err := json.MarshalIndent(resp, "", "  ")
 		if err != nil {
-			log.Fatal(err)
+			return
 		}
 
-		fmt.Printf("%s\n", body)
+		log.Printf("%s\n", body)
+		return
 	},
 }

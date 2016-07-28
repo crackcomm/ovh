@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"log"
 	"strings"
 
@@ -27,11 +28,11 @@ var cmdDomainsSet = cli.Command{
 			Usage: "changes domain transfer lock status (locked or unlocked)",
 		},
 	},
-	Action: func(c *cli.Context) {
+	Action: func(c *cli.Context) (err error) {
 		if len(c.Args()) == 0 && !c.Bool("all") {
-			log.Fatal("You have to use --all or provide list of domains in arguments.")
+			return errors.New("You have to use --all or provide list of domains in arguments.")
 		} else if len(c.Args()) > 0 && c.Bool("all") {
-			log.Fatal("Cannot use --all with list of domains")
+			return errors.New("Cannot use --all with list of domains")
 		}
 
 		client := client(c)
@@ -50,13 +51,14 @@ var cmdDomainsSet = cli.Command{
 
 		for _, domain := range domainsFromCtx(c) {
 			log.Printf("Updating %s", domain)
-			err := client.Domains.Patch(ctx, domain, patch)
+			err = client.Domains.Patch(ctx, domain, patch)
 			if err != nil {
-				log.Fatal(err)
+				return
 			}
 		}
 
-		log.Println("Done")
+		log.Println("OK")
+		return
 	},
 }
 

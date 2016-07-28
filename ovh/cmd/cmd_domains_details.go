@@ -3,7 +3,6 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"golang.org/x/net/context"
 
@@ -14,21 +13,22 @@ var cmdDomainsDetails = cli.Command{
 	Name:      "details",
 	Usage:     "prints domain details",
 	ArgsUsage: "<domain>",
-	Action: func(c *cli.Context) {
+	Action: func(c *cli.Context) (err error) {
 		if len(c.Args()) != 1 {
 			cli.ShowSubcommandHelp(c)
 			return
 		}
 		domain, err := client(c).Domains.Details(context.Background(), c.Args().First())
 		if err != nil {
-			log.Fatal(err)
+			return
 		}
 
 		body, err := json.MarshalIndent(domain, "", "  ")
 		if err != nil {
-			log.Fatal(err)
+			return
 		}
 
 		fmt.Printf("%s\n", body)
+		return
 	},
 }

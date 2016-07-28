@@ -12,14 +12,15 @@ import (
 var cmdAuth = cli.Command{
 	Name:  "auth",
 	Usage: "requests authentication",
-	Action: func(c *cli.Context) {
+	Action: func(c *cli.Context) (err error) {
 		resp, err := client(c).Authenticate(context.Background())
 		if err != nil {
-			log.Fatal(err)
+			return
 		}
 
 		log.Printf("Validate token: %s", resp.ValidationURL)
 		log.Printf("export OVH_CONSUMER_KEY=%q", resp.ConsumerKey)
+		return
 	},
 }
 

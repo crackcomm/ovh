@@ -7,6 +7,7 @@ Golang API Client for OVH APi.
 ## Command Line Tool
 
 ```sh
+$ go get -u github.com/crackcomm/ovh/...
 $ go install github.com/crackcomm/ovh/ovh
 $ ovh
 NAME:
