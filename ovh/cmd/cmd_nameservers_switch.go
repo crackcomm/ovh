@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"log"
 	"strings"
 
@@ -26,29 +27,33 @@ var cmdNSSwitch = cli.Command{
 			Usage: "nameserver",
 		},
 	},
-	Action: func(c *cli.Context) {
+	Action: func(c *cli.Context) (err error) {
 		if len(c.StringSlice("ns")) < 2 {
-			log.Fatal("At least two domain name servers are required.")
+			return errors.New("At least two domain name servers are required.")
 		}
 		if !c.Bool("all") && c.String("domain") == "" {
-			log.Fatal("You have to use --all or --domain.")
+			return errors.New("You have to use --all or --domain.")
 		}
 
 		ns := c.StringSlice("ns")
 		for _, domain := range domainsFromCtx(c) {
-			switchDomainNameservers(c, domain, ns)
+			err = switchDomainNameservers(c, domain, ns)
+			if err != nil {
+				return
+			}
 		}
 
-		log.Println("Done")
+		log.Println("OK")
+		return
 	},
 }
 
-func switchDomainNameservers(c *cli.Context, domain string, ns []string) {
+func switchDomainNameservers(c *cli.Context, domain string, ns []string) (err error) {
 	log.Printf("Switching %q nameservers: %s", domain, strings.Join(ns, ", "))
 
 	result, err := client(c).NameServers.List(context.Background(), domain)
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
 
 	var (
@@ -77,14 +82,15 @@ func switchDomainNameservers(c *cli.Context, domain string, ns []string) {
 
 	err = client(c).NameServers.Insert(context.Background(), domain, todo...)
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
 
 	for _, nameserver := range delete {
 		log.Printf("Deleting %q nameserver %q.", domain, nameserver.Host)
-		err := client(c).NameServers.Delete(context.Background(), domain, nameserver.ID)
+		err = client(c).NameServers.Delete(context.Background(), domain, nameserver.ID)
 		if err != nil {
-			log.Fatal(err)
+			return
 		}
 	}
+	return
 }
